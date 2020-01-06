@@ -1,0 +1,84 @@
+#
+# connection settings, sample
+#
+
+# connect to MongoDB using the following URL
+mongo-url = "mongodb://<replicaUser>:<replicaPassword>@<mongdbHost>:<mongodbPort>"
+
+# connect to the Elasticsearch REST API at the following node URLs
+elasticsearch-urls = ["http://localhost:9200"]
+
+#
+# frequently required settings
+#
+
+# if you don't want to listen for changes to all collections in MongoDB but only a few
+# e.g. only listen for inserts, updates, deletes, and drops from mydb.mycollection
+# this setting does not initiate a copy, it is a filter on the change listener only
+# namespace-regex = '^.*\.clean_data$'
+namespace-regex = '^query_db_sample\.clean_data$'
+
+#
+# additional settings
+#
+
+# compress requests to Elasticsearch
+gzip = true
+
+# generate indexing statistics
+stats = true
+
+# index statistics into Elasticsearch
+index-stats = false
+
+# If this option is set to true monstache will include 2 automatic fields in the source document indexed into Elasticsearch.
+# The first is oplog_ts which is the timestamp for the event copied directly from the MongoDB oplog.
+# The second is oplog_date which is an Elasticsearch date field corresponding to the time of the same event.
+index-oplog-time = true
+oplog-ts-field-name = "oplog_ts"
+oplog-date-field-name = "oplog_date"
+oplog-date-field-format = "2006-01-02 15:04:05"
+
+# propogate dropped collections in MongoDB as index deletes in Elasticsearch
+dropped-collections = false
+
+# propogate dropped databases in MongoDB as index deletes in Elasticsearch
+dropped-databases = false
+
+# do not start processing at the beginning of the MongoDB oplog
+# if you set the replay to true you may see version conflict messages
+# in the log if you had synced previously. This just means that you are replaying old docs which are already
+# in Elasticsearch with a newer version. Elasticsearch is preventing the old docs from overwriting new ones.
+replay = false
+
+# resume processing from a timestamp saved in a previous run
+# Stored in MongoDB: monstache.monstache
+resume = true
+
+# do not validate that progress timestamps have been saved
+resume-write-unsafe = false
+
+# override the name under which resume state is saved
+# resume-name = "default"
+resume-name = "sample"
+
+# print detailed information including request traces
+verbose = false
+
+# enable an embedded HTTP server to serve stats and health data (default port is 8080)
+enable-http-server = true
+http-server-addr = ":8080"
+
+# Use only one connection to avoid errors when newer modifications of a document get loaded before
+# old ones
+elasticsearch-max-conns = 1
+
+# Completely ignore document deletes in MongoDB.
+delete-strategy = 2
+
+# Enabling opmon plugin
+mapper-plugin-path = "/opt/riajenk/monstache/opmon_plugin.so"
+
+# Wokaround, as suggested in https://github.com/rwynn/monstache/issues/97
+[gtm-settings]
+channel-size = 1
